@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgriNexus | Smart Agriculture & Farmer Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-stone-50 text-slate-800 font-sans">
+  <!-- 10-Second Splash Screen -->
+  <div id="splash" class="fixed inset-0 bg-emerald-950 text-white flex flex-col items-center justify-center z-50 transition-opacity duration-700">
+    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-3 text-center">Welcome to Nikhil Mondal</h1>
+    <p class="text-emerald-300 text-lg md:text-xl mb-6 text-center">Smart Agriculture & Digital Farmer Empowerment Platform</p>
+    <div class="w-64 bg-emerald-900 h-2 rounded-full overflow-hidden mb-4">
+      <div id="progress" class="bg-emerald-400 h-full w-0 transition-all duration-1000"></div>
+    </div>
+    <button onclick="enterApp()" class="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-bold rounded-xl">Enter Portal Now</button>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="bg-emerald-900 text-white px-6 py-4 flex justify-between items-center shadow">
+    <div class="font-bold text-xl">🌱 AgriNexus</div>
+    <div class="space-x-2 text-sm">
+      <button onclick="showSection('home')" class="px-3 py-1.5 rounded bg-emerald-800 hover:bg-emerald-700">Home</button>
+      <button onclick="showSection('customer')" class="px-3 py-1.5 rounded bg-emerald-800 hover:bg-emerald-700">Customer</button>
+      <button onclick="showSection('farmer')" class="px-3 py-1.5 rounded bg-emerald-800 hover:bg-emerald-700">Farmer IoT</button>
+      <button onclick="showSection('govt')" class="px-3 py-1.5 rounded bg-emerald-800 hover:bg-emerald-700">Government</button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-6xl mx-auto p-6">
+    <!-- Home Cards -->
+    <section id="sec-home" class="grid md:grid-cols-3 gap-6 mt-6">
+      <div class="bg-white p-6 rounded-2xl shadow border border-emerald-100">
+        <h2 class="text-xl font-bold text-emerald-900 mb-2">🛒 Customer Login</h2>
+        <p class="text-sm text-slate-600 mb-4">Buy fresh farm produce directly from verified farmers without middlemen.</p>
+        <button onclick="showSection('customer')" class="w-full py-2.5 bg-emerald-700 text-white rounded-xl font-semibold">Open Marketplace</button>
+      </div>
+      <div class="bg-white p-6 rounded-2xl shadow border border-emerald-100">
+        <h2 class="text-xl font-bold text-emerald-900 mb-2">🚜 Farmer / Producer</h2>
+        <p class="text-sm text-slate-600 mb-4">Sell crops, monitor Raspberry Pi soil/MQ sensors & check weather.</p>
+        <button onclick="showSection('farmer')" class="w-full py-2.5 bg-emerald-700 text-white rounded-xl font-semibold">Open Farmer Dashboard</button>
+      </div>
+      <div class="bg-white p-6 rounded-2xl shadow border border-emerald-100">
+        <h2 class="text-xl font-bold text-emerald-900 mb-2">🏛️ Government Authority</h2>
+        <p class="text-sm text-slate-600 mb-4">Monitor farmer records, verified tax, KCC loans & credit scores.</p>
+        <button onclick="showSection('govt')" class="w-full py-2.5 bg-emerald-700 text-white rounded-xl font-semibold">Open Govt Portal</button>
+      </div>
+    </section>
+
+    <!-- Customer Marketplace -->
+    <section id="sec-customer" class="hidden mt-6">
+      <h2 class="text-2xl font-bold text-emerald-950 mb-4">Direct Farm Marketplace</h2>
+      <div id="product-grid" class="grid md:grid-cols-3 gap-6"></div>
+    </section>
+
+    <!-- Farmer Raspberry Pi IoT Dashboard -->
+    <section id="sec-farmer" class="hidden mt-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold text-emerald-950">Raspberry Pi Live Farm Telemetry</h2>
+        <span id="pi-status" class="px-4 py-1.5 rounded-full text-sm font-bold bg-red-100 text-red-700">● Device Offline</span>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white p-5 rounded-2xl shadow border"><p class="text-xs text-slate-500">Soil Moisture</p><p id="val-moisture" class="text-2xl font-bold mt-1">--</p></div>
+        <div class="bg-white p-5 rounded-2xl shadow border"><p class="text-xs text-slate-500">Soil Temperature</p><p id="val-temp" class="text-2xl font-bold mt-1">--</p></div>
+        <div class="bg-white p-5 rounded-2xl shadow border"><p class="text-xs text-slate-500">Soil pH</p><p id="val-ph" class="text-2xl font-bold mt-1">--</p></div>
+        <div class="bg-white p-5 rounded-2xl shadow border"><p class="text-xs text-slate-500">MQ Gas / Air Sensor</p><p id="val-mq" class="text-2xl font-bold mt-1">--</p></div>
+      </div>
+      <div class="bg-white p-6 rounded-2xl shadow border">
+        <h3 class="font-bold text-lg mb-3">List New Harvest</h3>
+        <div class="grid md:grid-cols-3 gap-3">
+          <input id="p-name" placeholder="Crop Name (e.g. Sharbati Wheat)" class="border p-2.5 rounded-xl" />
+          <input id="p-price" type="number" placeholder="Price per kg (₹)" class="border p-2.5 rounded-xl" />
+          <button onclick="addProduct()" class="bg-emerald-700 text-white font-bold rounded-xl py-2.5">Publish Product</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Government Monitoring Dashboard -->
+    <section id="sec-govt" class="hidden mt-6">
+      <h2 class="text-2xl font-bold text-emerald-950 mb-4">Government Farmer Credit & Loan Ledger</h2>
+      <div class="bg-white rounded-2xl shadow border overflow-x-auto">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-emerald-900 text-white">
+            <tr><th class="p-3">Farmer ID</th><th class="p-3">Name</th><th class="p-3">District</th><th class="p-3">Tax Status</th><th class="p-3">KCC Loan</th><th class="p-3">Credit Score</th></tr>
+          </thead>
+          <tbody class="divide-y">
+            <tr><td class="p-3 font-mono">FRM-101</td><td class="p-3 font-semibold">Rameshwar Mandal</td><td class="p-3">Jamtara</td><td class="p-3 text-emerald-700 font-bold">Verified Paid</td><td class="p-3">On-Time (₹0 Due)</td><td class="p-3 font-bold text-emerald-800">812 (Excellent)</td></tr>
+            <tr><td class="p-3 font-mono">FRM-102</td><td class="p-3 font-semibold">Suresh Murmu</td><td class="p-3">Dumka</td><td class="p-3 text-emerald-700 font-bold">Verified Paid</td><td class="p-3">Active (₹18,000)</td><td class="p-3 font-bold text-amber-700">745 (Good)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // 10s Splash Screen Timer
+    let sec = 0;
+    const timer = setInterval(() => {
+      sec++;
+      document.getElementById('progress').style.width = (sec * 10) + '%';
+      if (sec >= 10) enterApp();
+    }, 1000);
+
+    function enterApp() {
+      clearInterval(timer);
+      document.getElementById('splash').style.display = 'none';
+    }
+
+    function showSection(id) {
+      ['home', 'customer', 'farmer', 'govt'].forEach(s => {
+        document.getElementById('sec-' + s).classList.add('hidden');
+      });
+      document.getElementById('sec-' + id).classList.remove('hidden');
+    }
+
+    // Marketplace Products
+    const products = [
+      { name: 'Organic Basmati Rice', price: 68, farmer: 'Rameshwar Mandal (Jamtara)' },
+      { name: 'Golden Sharbati Wheat', price: 34, farmer: 'Suresh Murmu (Dumka)' },
+      { name: 'Yellow Maize (Makka)', price: 24, farmer: 'Birendra Oraon (Deoghar)' }
+    ];
+
+    function renderProducts() {
+      document.getElementById('product-grid').innerHTML = products.map(p => `
+        <div class="bg-white p-5 rounded-2xl shadow border">
+          <h3 class="font-bold text-lg text-emerald-950">${p.name}</h3>
+          <p class="text-xs text-slate-500 mb-3">Seller: ${p.farmer}</p>
+          <div class="flex justify-between items-center">
+            <span class="text-xl font-extrabold text-emerald-700">₹${p.price}/kg</span>
+            <button onclick="alert('Order placed for ${p.name}!')" class="px-4 py-2 bg-emerald-700 text-white text-sm font-bold rounded-xl">Buy Now</button>
+          </div>
+        </div>
+      `).join('');
+    }
+    renderProducts();
+
+    function addProduct() {
+      const name = document.getElementById('p-name').value;
+      const price = document.getElementById('p-price').value;
+      if (!name || !price) return alert('Enter crop name and price');
+      products.unshift({ name, price, farmer: 'Nikhil Mondal (Dhandra, Jamtara)' });
+      renderProducts();
+      alert('Crop published to Customer Marketplace!');
+    }
+
+    // Fetch Live Raspberry Pi Sensor Data every 5s
+    setInterval(async () => {
+      try {
+        const res = await fetch('/api/sensor-data');
+        const data = await res.json();
+        const badge = document.getElementById('pi-status');
+        if (data.connected) {
+          badge.textContent = '● Raspberry Pi Online';
+          badge.className = 'px-4 py-1.5 rounded-full text-sm font-bold bg-emerald-100 text-emerald-800';
+          document.getElementById('val-moisture').textContent = data.soilMoisture + '%';
+          document.getElementById('val-temp').textContent = data.soilTemp + '°C';
+          document.getElementById('val-ph').textContent = data.soilPh;
+          document.getElementById('val-mq').textContent = data.mqGas + ' (Raw)';
+        } else {
+          badge.textContent = '● Device Offline';
+          badge.className = 'px-4 py-1.5 rounded-full text-sm font-bold bg-red-100 text-red-700';
+          ['val-moisture', 'val-temp', 'val-ph', 'val-mq'].forEach(id => document.getElementById(id).textContent = '--');
+        }
+      } catch (e) {}
+    }, 5000);
+  </script>
+</body>
+</html>
